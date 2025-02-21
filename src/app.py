@@ -1,10 +1,11 @@
-from flask import Flask,request,render_template,jsonify,flash,redirect,url_for
+from flask import Flask,request,render_template,jsonify,flash,redirect,url_for,flash
 from flask_login import current_user,login_user,logout_user,LoginManager,login_required
 from flask_pymongo import PyMongo
 from models.entities.user import User
 from models.modeluser import ModelUser
 from werkzeug.security import generate_password_hash
 from bson import ObjectId
+from forms import Login,Register,Objeto
 
 
 app=Flask(__name__)
@@ -29,7 +30,10 @@ def index():
 
 @app.route('/login',methods=['GET','POST'])
 def login():
-    if request.method=='POST':
+
+    form=Login()
+
+    if form.validate() and request.method=='POST':
         email=request.form.get('email')
         password=request.form.get('password')
 
@@ -42,27 +46,29 @@ def login():
         if logged_user:
             if logged_user.password:
                 login_user(logged_user)
-                print('Usuario logueado con exito')
+                flash('Usuario logueado con exito')
                 return redirect(url_for('perfil'))
             else:
-                print('COntraseña incorrecta')
-                return render_template('login.html')
+                flash('COntraseña incorrecta')
+                return render_template('login.html',form=form)
         else:
-            print('Correo invalido')
-            return render_template('login.html')
+            flash('Correo invalido')
+            return render_template('login.html',form=form)
         
     
-    elif request.method=='GET':
+    else:
         if current_user.is_authenticated:
             return redirect(url_for('perfil'))
         else:
-            return render_template('login.html')
+            return render_template('login.html',form=form)
     
 
 
 @app.route('/register',methods=['GET','POST'])
 def register():
-    if request.method=='POST':
+    form=Register()
+
+    if form.validate() and request.method=='POST':
         username=request.form.get('username')
         email=request.form.get('email')
         password=request.form.get('password')
@@ -76,20 +82,24 @@ def register():
         if logged_user:
             if logged_user.password:
                 login_user(logged_user)
-                print('Usuario logueado con exito')
+                flash('Usuario logueado con exito')
+                return redirect(url_for('perfil'))
             else:
+                flash('Contraseña incorrecta')
                 print('Contraseña incorrecta')
+                return render_template('register.html', form=form)
         else:
-            print('Usuario existe')
+            flash('Usuario existe')
+            print('Usuario ya existe')
+            return render_template('register.html', form=form)
         
 
-        return render_template('register.html')
     
-    elif request.method=='GET':
+    else:
         if current_user.is_authenticated:
             return redirect(url_for('perfil'))
         else:
-            return render_template('register.html')
+            return render_template('register.html',form=form)
 
 
 
@@ -104,14 +114,12 @@ def perfil():
 
 
 
-
 @app.route('/crear',methods=['GET','POST'])
 @login_required
 def crear():
-    if request.method=='GET':
-        return render_template('crear.html')
+    form=Objeto()
     
-    elif request.method=='POST':
+    if form.validate() and request.method=='POST':
         foto=request.form.get('foto')
         descripcion=request.form.get('descripcion')
 
@@ -123,21 +131,37 @@ def crear():
 
         return redirect(url_for('perfil'))
     
+    else:
+        return render_template('crear.html',form=form)
+    
 
 
 @app.route('/edit/<id>',methods=['GET','POST'])
 def editar(id):
-    if request.method=='POST':
+    form=Objeto()
+
+    if form.validate() and request.method=='POST':
         foto=request.form.get('foto')
         descripcion=request.form.get('descripcion')
 
         print(foto,descripcion)
 
-        mongo.db.objetos.update_one({"_id":ObjectId(id)},{"foto":foto,"descripcion":descripcion})
+        mongo.db.objetos.update_one({"_id":ObjectId(id)},{"$set":{"foto":foto,"descripcion":descripcion}})
 
         return redirect(url_for('perfil'))
     elif request.method=='GET':
-        return render_template('editar.html')
+        objeto=mongo.db.objetos.find_one({"_id":ObjectId(id)})
+        print(objeto)
+
+        foto=objeto["foto"]
+        descripcion=objeto["descripcion"]
+
+        print(foto,descripcion)
+
+        form.foto.data=foto
+        form.descripcion.data=descripcion
+
+        return render_template('editar.html',form=form,id=id)
     
 
 

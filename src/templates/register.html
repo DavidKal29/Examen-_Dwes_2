@@ -9,9 +9,47 @@
 <section>
    <h1>Register</h1>
    <form action="/register" method="post">
-    <input type="text" name="username" placeholder="username">
-    <input type="text" name="email" placeholder="email">
-    <input type="text" name="password" placeholder="password">
+
+
+      {% with messages=get_flashed_messages() %}
+      {% if messages %}
+      {% for msg in messages %}
+      <span style="color: red;">{{error}}</span>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <div>
+         {% for error in form.username.errors %}
+         <span style="color: red;">{{error}}</span>
+         {% endfor %}
+         {{form.username(placeholder='Username')}}
+      </div>
+    
+      <div>
+         {% for error in form.email.errors %}
+         <span style="color: red;">{{error}}</span>
+         {% endfor %}
+         {{form.email(placeholder='Email')}}
+      </div>
+
+      <div>
+         {% for error in form.password.errors %}
+         <span style="color: red;">{{error}}</span>
+         {% endfor %}
+         {{form.password(placeholder='Password')}}
+      </div>
+
+      <div>
+         {% for error in form.confirm.errors %}
+         <span style="color: red;">{{error}}</span>
+         {% endfor %}
+         {{form.confirm(placeholder='Confirm password')}}
+      </div>
+
+      {{form.hidden_tag()}}
+
+
     <button type="submit">Enviar</button>
    </form>
 </section>

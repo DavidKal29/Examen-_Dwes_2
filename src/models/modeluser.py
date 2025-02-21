@@ -31,6 +31,7 @@ class ModelUser():
     def register(cls,mongo,user):
         try:
             row=list(mongo.db.users.find({"email":user.email}))
+            print('El row desde el register',row)
 
             if row:
                 print('Usuario ya existe')

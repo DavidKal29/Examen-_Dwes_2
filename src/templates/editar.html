@@ -6,9 +6,24 @@
 {% block body %}
 <section>
    <h1>Editar</h1>
-   <form action="/crear" method="post">
-    <input type="text" name="foto" placeholder="Foto">
-    <input type="descripcion" name="descripcion" placeholder="Descripcion">
+   <form action="/edit/{{id}}" method="post">
+      <div>
+         {% for error in form.foto.errors %}
+         <span style="color: red;">{{error}}</span>
+         {% endfor %}
+         {{form.foto(placeholder='Tu foto')}}
+      </div>
+   
+      <div>
+         {% for error in form.descripcion.errors %}
+         <span style="color: red;">{{error}}</span>
+         {% endfor %}
+         {{form.descripcion(placeholder='Tu descripcion')}}
+      </div>
+   
+      {{form.hidden_tag()}}
+
+
     <button type="submit">Editar</button>
    </form>
 </section>

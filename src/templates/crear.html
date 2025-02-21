@@ -7,9 +7,24 @@
 <section>
    <h1>Crear</h1>
    <form action="/crear" method="post">
-    <input type="text" name="foto" placeholder="Foto">
-    <input type="descripcion" name="descripcion" placeholder="Descripcion">
-    <button type="submit">Enviar</button>
+    
+   <div>
+      {% for error in form.foto.errors %}
+      <span style="color: red;">{{error}}</span>
+      {% endfor %}
+      {{form.foto(placeholder='Tu foto')}}
+   </div>
+
+   <div>
+      {% for error in form.descripcion.errors %}
+      <span style="color: red;">{{error}}</span>
+      {% endfor %}
+      {{form.descripcion(placeholder='Tu descripcion')}}
+   </div>
+
+   {{form.hidden_tag()}}
+
+   <button type="submit">Enviar</button>
    </form>
 </section>
 
