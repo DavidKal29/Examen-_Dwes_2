@@ -14,6 +14,17 @@ app.secret_key='54d8c25705340f53e8b0f081fe49b8fc4285a4d3d1c6446b'
 #jwt_secret_key="54d8c25705340f53e8b0f081fe49b8fc428ru333d1c6446b"
 mongo=PyMongo(app)
 
+
+def status_404(error):
+    return render_template('error_404.html')
+
+def status_401(error):
+    return redirect(url_for('index'))
+
+app.register_error_handler(404,status_404)
+app.register_error_handler(401,status_401)
+
+
 login_manager=LoginManager(app)
 
 @login_manager.user_loader
@@ -23,10 +34,7 @@ def load_user(id):
 
 @app.route('/')
 def index():
-    if current_user.is_authenticated:
-        return redirect(url_for('perfil'))
-    else:
-        return render_template('index.html')
+    return render_template('index.html')
 
 @app.route('/login',methods=['GET','POST'])
 def login():

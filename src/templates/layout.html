@@ -11,8 +11,17 @@
 
 
         <div>
+            {% if current_user.id %}
+            <a href="/perfil">Perfil</a>
+            <a href="/crear">Crear objetos</a>
+            <a href="/logout">Logout</a>
+            
+            {% else %}
+            
             <a href="/register">Register</a>
             <a href="/login">Login</a>
+            
+            {% endif %}
         </div>
     </nav>
     {% block body %}
