@@ -65,6 +65,7 @@ class ModelUser():
     def get_by_id(cls,mongo,id):
         try:
             row=list(mongo.db.users.find({"_id":id}))
+            print('El row:',row)
             
             if row:
                 id=row[0]["_id"]

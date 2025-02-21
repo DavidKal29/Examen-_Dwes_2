@@ -1,0 +1,16 @@
+{% extends './layout.html' %}
+
+{% block title %} Editar {%endblock%}
+
+
+{% block body %}
+<section>
+   <h1>Editar</h1>
+   <form action="/crear" method="post">
+    <input type="text" name="foto" placeholder="Foto">
+    <input type="descripcion" name="descripcion" placeholder="Descripcion">
+    <button type="submit">Editar</button>
+   </form>
+</section>
+
+{%endblock%}

@@ -1,0 +1,22 @@
+{% extends './layout.html' %}
+
+
+
+{% block title %} Perfil {%endblock%}
+
+
+{% block body %}
+<section>
+    <h1>WELCOME {{current_user.username}}</h1>
+
+    {% if objetos %}
+    {% for objeto in objetos %}
+    <h1>  {{objeto["foto"]}} {{objeto["descripcion"]}} {{objeto["id_user"]}}   <a href="/edit/{{objeto["_id"]}}">Editar</a>  <a href="/delete/{{objeto["_id"]}}">Borrar</a></h1>
+    {% endfor %}
+    {% endif %}
+
+    <a href="/logout">Cerrar sesion</a>
+    <a href="/crear">Crear objetos</a>
+</section>
+
+{%endblock%}
